@@ -1,0 +1,19 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { project: CollectionEntry<'projets'> }
+const { data } = Astro.props.project;
+---
+<article class="card">
+  <h3>{data.title}</h3>
+  <p>{data.description}</p>
+  {data.stack.length > 0 && (
+    <ul class="tags" style="margin-bottom:1rem">
+      {data.stack.map((s) => <li class="tag">{s}</li>)}
+    </ul>
+  )}
+  <div class="card-links">
+    {data.url && <a href={data.url}>Voir →</a>}
+    {data.repo && <a href={data.repo}>Code source →</a>}
+  </div>
+</article>
