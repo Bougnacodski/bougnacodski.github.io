@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { SITE } from '../config';
+import { ROUTES, otherLang, t, localize, type Lang } from '../i18n';
+import { getPosts, getProjects, url } from '../utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const posts = (await getPosts(lang)).slice(0, 5);
+const projets = (await getProjects(lang)).slice(0, 4);
+const links = SITE.links.map((l) => ({ ...l, href: l.rss ? localize(lang, l.href) : l.href }));
+---
+<Base lang={lang} alt={ROUTES.home[otherLang(lang)]}>
+  <div class="container">
+    <section class="hero">
+      <div class="eyebrow">{t(lang, 'home.eyebrow')}</div>
+      <h1>{t(lang, 'home.hello')}</h1>
+      <p>{SITE.intro[lang]}</p>
+      <div class="links">
+        {links.map((l) => <a href={url(l.href)} rel="me">{l.label} →</a>)}
+      </div>
+    </section>
+
+    <div class="section-head">
+      <h2>{t(lang, 'home.latest')}</h2>
+      <a href={url(ROUTES.blog[lang])}>{t(lang, 'home.allPosts')}</a>
+    </div>
+    {posts.length > 0 ? <PostList posts={posts} lang={lang} /> : <p class="muted">{t(lang, 'blog.empty')}</p>}
+
+    {projets.length > 0 && (
+      <>
+        <div class="section-head">
+          <h2>{t(lang, 'home.projects')}</h2>
+          <a href={url(ROUTES.projects[lang])}>{t(lang, 'home.allProjects')}</a>
+        </div>
+        <div class="project-grid">
+          {projets.map((p) => <ProjectCard project={p} lang={lang} />)}
+        </div>
+      </>
+    )}
+  </div>
+</Base>

@@ -84,10 +84,17 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.2; lett
 .links { display: flex; gap: 1.2rem; flex-wrap: wrap; }
 
 .brand, .nav a { white-space: nowrap; }
+.lang-switch { display: flex; gap: .15rem; font-size: .8rem; letter-spacing: .04em; font-weight: 500; border: 1px solid var(--line); border-radius: 999px; padding: .1rem; }
+.lang-switch > * { padding: .2rem .5rem; border-radius: 999px; line-height: 1.3; }
+.lang-switch span { background: var(--surface); color: var(--text); }
+.lang-switch a { color: var(--muted); }
+.lang-switch a:hover { color: var(--text); }
+.translation-note { font-size: .9rem; margin-top: .9rem; }
+.translation-note a { color: var(--accent); }
 @media (max-width: 560px) {
   .site-header .container { flex-wrap: wrap; height: auto; padding-top: .9rem; padding-bottom: .9rem; row-gap: .5rem; }
   .nav { gap: 1.1rem; width: 100%; }
-  .theme-toggle { margin-left: auto; }
+  .lang-switch { margin-left: auto; }
 }
 
 main { padding-top: 3.5rem; }

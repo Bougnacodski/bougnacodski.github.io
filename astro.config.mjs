@@ -10,7 +10,11 @@ import rehypeKatex from 'rehype-katex';
 // - Nom de domaine personnel        → site: 'https://ton-domaine.fr'
 export default defineConfig({
   site: 'https://bougnacodski.github.io',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      i18n: { defaultLocale: 'fr', locales: { fr: 'fr-FR', en: 'en-GB' } },
+    }),
+  ],
   markdown: {
     // Processeur Markdown « unified » : nécessaire pour les formules (remark-math + KaTeX)
     processor: unified({

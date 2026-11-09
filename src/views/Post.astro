@@ -1,0 +1,62 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { ROUTES, t, type Lang } from '../i18n';
+import { formatDate, readingTime, tagPath, postPath, url } from '../utils';
+
+type Post = CollectionEntry<'blog'>;
+interface Props { lang: Lang; post: Post; newer?: Post; older?: Post; translation?: Post }
+const { lang, post, newer, older, translation } = Astro.props;
+const { Content, headings } = await render(post);
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const minutes = readingTime(post.body);
+const alt = translation ? postPath(translation) : undefined;
+---
+<Base lang={lang} title={post.data.title} description={post.data.description} type="article" alt={alt}>
+  <article class="container narrow">
+    <header class="post-header">
+      <a class="eyebrow" href={url(ROUTES.blog[lang])} style="text-decoration:none">{t(lang, 'post.back')}</a>
+      <h1>{post.data.title}</h1>
+      <p class="lede">{post.data.description}</p>
+      <div class="meta">
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
+        <span>·</span>
+        <span>{t(lang, 'post.readingTime')(minutes)}</span>
+        {post.data.updated && <span>· {t(lang, 'post.updated')} {formatDate(post.data.updated, lang)}</span>}
+        {post.data.draft && <span class="tag">{t(lang, 'post.draft')}</span>}
+      </div>
+      {post.data.tags.length > 0 && (
+        <ul class="tags" style="margin-top:1rem">
+          {post.data.tags.map((tag) => <li><a class="tag" href={url(tagPath(lang, tag))}>{tag}</a></li>)}
+        </ul>
+      )}
+      {translation && (
+        <p class="translation-note">
+          <a href={url(postPath(translation))} hreflang={translation.id.split('/')[0]}>{t(lang, 'post.translation')} →</a>
+        </p>
+      )}
+    </header>
+
+    {toc.length >= 3 && (
+      <details class="toc">
+        <summary>{t(lang, 'post.toc')}</summary>
+        <ul>
+          {toc.map((h) => <li class={`depth-${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}
+        </ul>
+      </details>
+    )}
+
+    <div class="prose">
+      <Content />
+    </div>
+
+    <nav class="post-footer" aria-label={t(lang, 'post.neighbours')}>
+      <div>
+        {older && <a href={url(postPath(older))}><span>{t(lang, 'post.prev')}</span>{older.data.title}</a>}
+      </div>
+      <div class="next">
+        {newer && <a href={url(postPath(newer))}><span>{t(lang, 'post.next')}</span>{newer.data.title}</a>}
+      </div>
+    </nav>
+  </article>
+</Base>

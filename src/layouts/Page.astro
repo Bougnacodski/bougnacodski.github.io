@@ -1,9 +1,15 @@
 ---
+// Mise en page des pages simples écrites en Markdown (À propos / About).
+// Dans l'en-tête du fichier : lang (fr ou en) et route (clé de ROUTES dans src/i18n.ts).
 import Base from './Base.astro';
+import { ROUTES, otherLang, type Lang, type RouteKey } from '../i18n';
 
 const { frontmatter } = Astro.props;
+const lang: Lang = frontmatter.lang ?? 'fr';
+const route = frontmatter.route as RouteKey | undefined;
+const alt = route ? ROUTES[route][otherLang(lang)] : undefined;
 ---
-<Base title={frontmatter.title} description={frontmatter.description}>
+<Base lang={lang} title={frontmatter.title} description={frontmatter.description} alt={alt}>
   <article class="container narrow">
     <h1 class="page-title">{frontmatter.title}</h1>
     <div class="prose">

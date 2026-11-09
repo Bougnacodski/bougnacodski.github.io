@@ -3,6 +3,7 @@ title: Bienvenue sur ce site
 description: Pourquoi j'ouvre un site personnel, et à quoi ressemble un article ici.
 date: 2026-11-09
 tags: [méta, mathématiques]
+translationKey: bienvenue
 ---
 
 Ce site est un espace à moi, hors des plateformes : j'y publie des articles, des notes et mes projets. Cet article sert aussi de modèle. Il montre tout ce qu'on peut écrire en Markdown.
@@ -55,4 +56,4 @@ def flux(h, hu, g=9.81):
 
 ---
 
-Pour écrire un nouvel article, il suffit de copier ce fichier dans `src/content/blog/`, de changer l'en-tête et d'écrire.
+Pour écrire un nouvel article, il suffit de copier ce fichier dans `src/content/blog/fr/`, de changer l'en-tête et d'écrire.

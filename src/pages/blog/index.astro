@@ -1,26 +1,4 @@
 ---
-import Base from '../../layouts/Base.astro';
-import PostList from '../../components/PostList.astro';
-import { getPosts, slugify, url } from '../../utils';
-
-const posts = await getPosts();
-const byYear = Map.groupBy(posts, (p) => p.data.date.getFullYear());
-const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort((a, b) => a.localeCompare(b, 'fr'));
+import BlogIndex from '../../views/BlogIndex.astro';
 ---
-<Base title="Articles" description="Tous les articles, du plus récent au plus ancien.">
-  <div class="container">
-    <h1 class="page-title">Articles</h1>
-    <p class="muted">{posts.length} article{posts.length > 1 ? 's' : ''}, du plus récent au plus ancien.</p>
-    {tags.length > 0 && (
-      <ul class="tags" style="margin-top:1rem">
-        {tags.map((t) => <li><a class="tag" href={url(`/tags/${slugify(t)}/`)}>{t}</a></li>)}
-      </ul>
-    )}
-    {[...byYear].map(([year, list]) => (
-      <>
-        <h2 class="year">{year}</h2>
-        <PostList posts={list} />
-      </>
-    ))}
-  </div>
-</Base>
+<BlogIndex lang="fr" />

@@ -2,6 +2,8 @@
 layout: ../layouts/Page.astro
 title: À propos
 description: Qui je suis et de quoi parle ce site.
+lang: fr
+route: about
 ---
 
 <!-- Page à réécrire avec tes propres mots : ce texte n'est qu'un point de départ. -->

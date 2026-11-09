@@ -3,35 +3,55 @@ import '@fontsource-variable/newsreader';
 import '@fontsource-variable/inter';
 import 'katex/dist/katex.min.css';
 import '../styles/global.css';
-import { SITE, NAV } from '../config';
+import { SITE } from '../config';
+import { LANGS, ROUTES, LANG_NAMES, LOCALES, t, otherLang, localize, type Lang } from '../i18n';
 import { url } from '../utils';
 
 interface Props {
+  lang: Lang;
   title?: string;
   description?: string;
   type?: 'website' | 'article';
+  // Adresse de la même page dans l'autre langue, quand elle existe.
+  alt?: string;
 }
-const { title, description = SITE.description, type = 'website' } = Astro.props;
+const { lang, title, description = SITE.description[lang], type = 'website', alt } = Astro.props;
+const other = otherLang(lang);
 const fullTitle = title ? `${title} · ${SITE.title}` : SITE.title;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const path = Astro.url.pathname;
+const switchTo = alt ?? ROUTES.home[other];
+
+const nav = [
+  { label: t(lang, 'nav.blog'), href: ROUTES.blog[lang] },
+  { label: t(lang, 'nav.projects'), href: ROUTES.projects[lang] },
+  { label: t(lang, 'nav.about'), href: ROUTES.about[lang] },
+];
+const links = SITE.links.map((l) => ({ ...l, href: l.rss ? localize(lang, l.href) : l.href }));
+const rss = localize(lang, '/rss.xml');
 ---
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {alt && (
+      <>
+        <link rel="alternate" hreflang={lang} href={canonical} />
+        <link rel="alternate" hreflang={other} href={new URL(url(alt), Astro.site)} />
+      </>
+    )}
     <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
-    <link rel="alternate" type="application/rss+xml" title={SITE.title} href={url('/rss.xml')} />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href={url(rss)} />
     <link rel="sitemap" href={url('/sitemap-index.xml')} />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:locale" content="fr_FR" />
+    <meta property="og:locale" content={LOCALES[lang].replace('-', '_')} />
     <meta name="twitter:card" content="summary" />
     <script is:inline>
       try {
@@ -43,14 +63,23 @@ const path = Astro.url.pathname;
   <body>
     <header class="site-header">
       <div class="container">
-        <a class="brand" href={url('/')}>{SITE.title}</a>
-        <nav class="nav" aria-label="Navigation principale">
-          {NAV.map((item) => (
+        <a class="brand" href={url(ROUTES.home[lang])}>{SITE.title}</a>
+        <nav class="nav" aria-label={t(lang, 'nav.label')}>
+          {nav.map((item) => (
             <a href={url(item.href)} aria-current={path.startsWith(url(item.href)) ? 'page' : undefined}>
               {item.label}
             </a>
           ))}
-          <button class="theme-toggle" id="theme-toggle" aria-label="Changer de thème" title="Changer de thème">
+          <div class="lang-switch">
+            {LANGS.map((l) =>
+              l === lang ? (
+                <span aria-current="true">{l.toUpperCase()}</span>
+              ) : (
+                <a href={url(switchTo)} hreflang={l} lang={l} title={LANG_NAMES[l]}>{l.toUpperCase()}</a>
+              ),
+            )}
+          </div>
+          <button class="theme-toggle" id="theme-toggle" aria-label={t(lang, 'theme.toggle')} title={t(lang, 'theme.toggle')}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <circle cx="12" cy="12" r="9"></circle><path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor"></path>
             </svg>
@@ -67,7 +96,7 @@ const path = Astro.url.pathname;
       <div class="container">
         <span>© {new Date().getFullYear()} {SITE.author}</span>
         <div class="links">
-          {SITE.links.map((l) => <a href={url(l.href)} rel="me">{l.label}</a>)}
+          {links.map((l) => <a href={url(l.href)} rel="me">{l.label}</a>)}
         </div>
       </div>
     </footer>

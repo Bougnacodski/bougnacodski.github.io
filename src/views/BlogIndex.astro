@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { ROUTES, otherLang, t, type Lang } from '../i18n';
+import { getPosts, tagPath, url } from '../utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const posts = await getPosts(lang);
+const byYear = Map.groupBy(posts, (p) => p.data.date.getFullYear());
+const tags = [...new Set(posts.flatMap((p) => p.data.tags))].sort((a, b) => a.localeCompare(b, lang));
+---
+<Base lang={lang} title={t(lang, 'blog.title')} description={t(lang, 'blog.description')} alt={ROUTES.blog[otherLang(lang)]}>
+  <div class="container">
+    <h1 class="page-title">{t(lang, 'blog.title')}</h1>
+    <p class="muted">{posts.length > 0 ? t(lang, 'blog.count')(posts.length) : t(lang, 'blog.empty')}</p>
+    {tags.length > 0 && (
+      <ul class="tags" style="margin-top:1rem">
+        {tags.map((tag) => <li><a class="tag" href={url(tagPath(lang, tag))}>{tag}</a></li>)}
+      </ul>
+    )}
+    {[...byYear].map(([year, list]) => (
+      <>
+        <h2 class="year">{year}</h2>
+        <PostList posts={list} lang={lang} />
+      </>
+    ))}
+  </div>
+</Base>

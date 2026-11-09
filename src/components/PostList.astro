@@ -1,15 +1,16 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { formatDate, url } from '../utils';
+import type { Lang } from '../i18n';
+import { formatDate, postPath, url } from '../utils';
 
-interface Props { posts: CollectionEntry<'blog'>[] }
-const { posts } = Astro.props;
+interface Props { posts: CollectionEntry<'blog'>[]; lang: Lang }
+const { posts, lang } = Astro.props;
 ---
 <ul class="post-list">
   {posts.map((post) => (
     <li>
-      <a href={url(`/blog/${post.id}/`)}>
-        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+      <a href={url(postPath(post))}>
+        <time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, lang)}</time>
         <div>
           <h3>{post.data.title}</h3>
           <p>{post.data.description}</p>

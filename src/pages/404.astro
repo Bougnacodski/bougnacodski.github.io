@@ -1,11 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
+import { ROUTES, t } from '../i18n';
 import { url } from '../utils';
 ---
-<Base title="Page introuvable">
+<Base lang="fr" title="404">
   <div class="container narrow" style="text-align:center;padding:4rem 0">
-    <div class="eyebrow">Erreur 404</div>
-    <h1 class="page-title">Cette page n'existe pas.</h1>
-    <p class="muted"><a href={url('/')}>Retour à l'accueil</a></p>
+    <div class="eyebrow">404</div>
+    <h1 class="page-title">{t('fr', '404.title')}</h1>
+    <p class="muted" lang="en">{t('en', '404.title')}</p>
+    <p>
+      <a href={url(ROUTES.home.fr)}>{t('fr', '404.back')}</a>
+      &nbsp;·&nbsp;
+      <a href={url(ROUTES.home.en)} lang="en">{t('en', '404.back')}</a>
+    </p>
   </div>
 </Base>

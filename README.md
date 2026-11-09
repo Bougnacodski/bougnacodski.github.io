@@ -18,9 +18,13 @@ Site statique construit avec [Astro](https://astro.build), publié sur GitHub Pa
 
 Si tu choisis un autre nom de dépôt, adapte `site` (et `base`) dans `astro.config.mjs`, et les liens dans `src/config.ts`.
 
+## Deux langues
+
+Le site est bilingue : le français est à la racine (`/blog/…`), l'anglais sous `/en/` (`/en/blog/…`). Le sélecteur FR / EN de l'en-tête mène à la même page dans l'autre langue quand elle existe, sinon à l'accueil de l'autre langue. Chaque langue a son propre flux RSS : `/rss.xml` et `/en/rss.xml`.
+
 ## Écrire un article
 
-Crée un fichier dans `src/content/blog/`, par exemple `mon-article.md` :
+Crée un fichier dans `src/content/blog/fr/` (ou `src/content/blog/en/` pour un article en anglais), par exemple `mon-article.md` :
 
 ```markdown
 ---
@@ -36,21 +40,25 @@ Le texte en Markdown…
 
 Puis `git add`, `git commit`, `git push` : le site se met à jour tout seul.
 
-- Le nom du fichier devient l'adresse : `/blog/mon-article/`.
+- Le nom du fichier devient l'adresse : `/blog/mon-article/` ou `/en/blog/my-post/`.
+- Un article peut n'exister que dans une seule langue.
+- **Traduire un article** : crée la version anglaise dans `src/content/blog/en/` et donne aux deux fichiers le même `translationKey` dans l'en-tête (par exemple `translationKey: mon-article`). Les deux versions sont alors reliées : lien « Lire en anglais / Lire en français » et sélecteur de langue. Si les deux fichiers portent le même nom, la clé est facultative.
 - `draft: true` garde l'article hors ligne (il reste visible en local).
 - Formules : `$...$` dans le texte, `$$...$$` centrées (rendu par KaTeX).
 - Images : place-les dans `public/images/` et écris `![légende](/images/photo.jpg)`.
 
 ## Ajouter un projet
 
-Un fichier par projet dans `src/content/projets/` (voir les exemples), avec `title`, `description`, `repo` et/ou `url`, `stack` et `order` pour l'ordre d'affichage.
+Un fichier par projet et par langue, dans `src/content/projets/fr/` et `src/content/projets/en/` (voir les exemples), avec `title`, `description`, `repo` et/ou `url`, `stack` et `order` pour l'ordre d'affichage.
 
 ## Modifier le site
 
 | Quoi | Où |
 | --- | --- |
-| Nom, présentation, liens | `src/config.ts` |
-| Page « À propos » | `src/pages/a-propos.md` |
+| Nom, présentation (FR et EN), liens | `src/config.ts` |
+| Libellés de l'interface (menus, boutons…) | `src/i18n.ts` |
+| Page « À propos » | `src/pages/a-propos.md` et `src/pages/en/about.md` |
+| Mise en page des pages | `src/views/` (partagées entre les deux langues) |
 | Couleurs, polices, mise en page | `src/styles/global.css` (variables en haut du fichier) |
 | Adresse du site | `astro.config.mjs` |
 

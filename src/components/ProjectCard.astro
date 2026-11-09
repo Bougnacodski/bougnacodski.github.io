@@ -1,8 +1,10 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { t, type Lang } from '../i18n';
 
-interface Props { project: CollectionEntry<'projets'> }
-const { data } = Astro.props.project;
+interface Props { project: CollectionEntry<'projets'>; lang: Lang }
+const { project, lang } = Astro.props;
+const { data } = project;
 ---
 <article class="card">
   <h3>{data.title}</h3>
@@ -13,7 +15,7 @@ const { data } = Astro.props.project;
     </ul>
   )}
   <div class="card-links">
-    {data.url && <a href={data.url}>Voir →</a>}
-    {data.repo && <a href={data.repo}>Code source →</a>}
+    {data.url && <a href={data.url}>{t(lang, 'project.view')}</a>}
+    {data.repo && <a href={data.repo}>{t(lang, 'project.code')}</a>}
   </div>
 </article>

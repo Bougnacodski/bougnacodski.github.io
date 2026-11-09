@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { ROUTES, otherLang, t, type Lang } from '../i18n';
+import { getProjects } from '../utils';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const projets = await getProjects(lang);
+---
+<Base lang={lang} title={t(lang, 'projects.title')} description={t(lang, 'projects.description')} alt={ROUTES.projects[otherLang(lang)]}>
+  <div class="container">
+    <h1 class="page-title">{t(lang, 'projects.title')}</h1>
+    <p class="muted">{t(lang, 'projects.description')}</p>
+    <div class="project-grid">
+      {projets.map((p) => <ProjectCard project={p} lang={lang} />)}
+    </div>
+  </div>
+</Base>
