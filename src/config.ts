@@ -28,5 +28,5 @@ export const COMMENTS = {
   repo: 'Bougnacodski/bougnacodski.github.io',
   repoId: 'R_kgDOVobBJg',
   category: 'Announcements',
-  categoryId: '',
+  categoryId: 'DIC_kwDOVobBJs4DKwLk',
 };
