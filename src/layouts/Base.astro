@@ -25,6 +25,7 @@ const switchTo = alt ?? ROUTES.home[other];
 const nav = [
   { label: t(lang, 'nav.blog'), href: ROUTES.blog[lang] },
   { label: t(lang, 'nav.projects'), href: ROUTES.projects[lang] },
+  { label: t(lang, 'nav.cv'), href: ROUTES.cv[lang] },
   { label: t(lang, 'nav.about'), href: ROUTES.about[lang] },
 ];
 const links = SITE.links.map((l) => ({ ...l, href: l.rss ? localize(lang, l.href) : l.href }));
@@ -70,21 +71,23 @@ const rss = localize(lang, '/rss.xml');
               {item.label}
             </a>
           ))}
-          <div class="lang-switch">
-            {LANGS.map((l) =>
-              l === lang ? (
-                <span aria-current="true">{l.toUpperCase()}</span>
-              ) : (
-                <a href={url(switchTo)} hreflang={l} lang={l} title={LANG_NAMES[l]}>{l.toUpperCase()}</a>
-              ),
-            )}
-          </div>
-          <button class="theme-toggle" id="theme-toggle" aria-label={t(lang, 'theme.toggle')} title={t(lang, 'theme.toggle')}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="9"></circle><path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor"></path>
-            </svg>
-          </button>
         </nav>
+        <div class="header-tools">
+            <div class="lang-switch">
+              {LANGS.map((l) =>
+                l === lang ? (
+                  <span aria-current="true">{l.toUpperCase()}</span>
+                ) : (
+                  <a href={url(switchTo)} hreflang={l} lang={l} title={LANG_NAMES[l]}>{l.toUpperCase()}</a>
+                ),
+              )}
+            </div>
+            <button class="theme-toggle" id="theme-toggle" aria-label={t(lang, 'theme.toggle')} title={t(lang, 'theme.toggle')}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle><path d="M12 3v18a9 9 0 0 0 0-18z" fill="currentColor"></path>
+              </svg>
+            </button>
+        </div>
       </div>
     </header>
 

@@ -62,6 +62,12 @@ Mise en route (une seule fois) :
 - `comments: false` dans l'en-tête d'un article désactive ses commentaires.
 - Tant que `categoryId` est vide, aucun commentaire n'est affiché et aucun script giscus n'est chargé.
 
+## CV
+
+La page CV (`/cv/` et `/en/cv/`) est générée à partir de `src/data/cv.ts`. Pour ajouter un poste, copie un bloc de la liste `experience` et place-le en tête de liste. Les dates s'écrivent au format `AAAA-MM`. Laisse `end` absent pour le poste actuel. Les durées se calculent toutes seules.
+
+Le bouton « Télécharger en PDF » ouvre la fenêtre d'impression du navigateur. Choisis « Enregistrer au format PDF » : une mise en page dédiée retire le menu et le pied de page.
+
 ## Ajouter un projet
 
 Un fichier par projet et par langue, dans `src/content/projets/fr/` et `src/content/projets/en/` (voir les exemples), avec `title`, `description`, `repo` et/ou `url`, `stack` et `order` pour l'ordre d'affichage.
@@ -72,6 +78,7 @@ Un fichier par projet et par langue, dans `src/content/projets/fr/` et `src/cont
 | --- | --- |
 | Nom, présentation (FR et EN), liens | `src/config.ts` |
 | Libellés de l'interface (menus, boutons…) | `src/i18n.ts` |
+| CV (profil, expériences, en FR et EN) | `src/data/cv.ts` |
 | Page « À propos » | `src/pages/a-propos.md` et `src/pages/en/about.md` |
 | Mise en page des pages | `src/views/` (partagées entre les deux langues) |
 | Couleurs, polices, mise en page | `src/styles/global.css` (variables en haut du fichier) |

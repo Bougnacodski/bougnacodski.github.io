@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import { CV } from '../data/cv';
+import { SITE } from '../config';
+import { LOCALES, ROUTES, otherLang, t, type Lang } from '../i18n';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const parse = (ym: string) => {
+  const [y, m] = ym.split('-').map(Number);
+  return { y, m };
+};
+const now = new Date();
+const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+const fmtMonth = (ym: string) => {
+  const { y, m } = parse(ym);
+  return new Date(y, m - 1, 1).toLocaleDateString(LOCALES[lang], { month: 'short', year: 'numeric' });
+};
+// Durée en mois, bornes incluses (comme LinkedIn).
+const duration = (start: string, end = today) => {
+  const a = parse(start), b = parse(end);
+  const months = (b.y - a.y) * 12 + (b.m - a.m) + 1;
+  return t(lang, 'cv.duration')(Math.floor(months / 12), months % 12);
+};
+const github = SITE.links.find((l) => l.label === 'GitHub');
+---
+<Base lang={lang} title={t(lang, 'cv.title')} description={t(lang, 'cv.description')} alt={ROUTES.cv[otherLang(lang)]}>
+  <div class="container narrow cv">
+    <header class="cv-header">
+      <div>
+        <h1 class="page-title">{SITE.author}</h1>
+        <p class="cv-headline">{CV.headline[lang]}</p>
+        {github && <p class="cv-contact muted print-only">{github.href.replace('https://', '')} · bougnacodski.github.io</p>}
+      </div>
+      <button class="cv-print" type="button" onclick="window.print()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
+        {t(lang, 'cv.print')}
+      </button>
+    </header>
+
+    <section class="cv-section">
+      <h2>{t(lang, 'cv.about')}</h2>
+      <div class="cv-about">
+        {CV.about[lang].map((p) => <p>{p}</p>)}
+      </div>
+      <p class="cv-skills">
+        <span class="muted">{t(lang, 'cv.topSkills')}{lang === 'fr' ? ' :' : ':'}</span>{' '}
+        {CV.topSkills[lang].join(' · ')}
+      </p>
+    </section>
+
+    <section class="cv-section">
+      <h2>{t(lang, 'cv.experience')}</h2>
+      <ol class="timeline">
+        {CV.experience.map((job) => (
+          <li class="job">
+            <div class="job-head">
+              <h3>{job.role}</h3>
+              <p class="job-company">
+                {job.company}
+                <span class="muted"> · {job.contract[lang]}</span>
+              </p>
+              <p class="job-meta muted">
+                <time datetime={job.start}>{fmtMonth(job.start)}</time>
+                {' – '}
+                {job.end ? <time datetime={job.end}>{fmtMonth(job.end)}</time> : t(lang, 'cv.present')}
+                {' · '}{duration(job.start, job.end)}
+                {job.location && <> · {job.location[lang]}</>}
+              </p>
+            </div>
+            <p class="job-summary">{job.summary[lang]}</p>
+            <ul class="job-highlights">
+              {job.highlights.map((h) => <li>{h[lang]}</li>)}
+            </ul>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .cv-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .cv-header .page-title { margin-bottom: .2rem; }
+  .cv-headline { font-family: var(--serif); font-size: 1.3rem; color: var(--muted); margin: 0; }
+  .cv-print { display: inline-flex; align-items: center; gap: .45rem; font: inherit; font-size: .9rem; color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: .45rem .95rem; cursor: pointer; transition: border-color .15s, color .15s; }
+  .cv-print:hover { border-color: var(--accent); color: var(--accent); }
+  .print-only { display: none; }
+
+  .cv-section { margin-top: 3rem; }
+  .cv-section > h2 { font-size: .78rem; font-family: var(--sans); font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: .6rem; margin: 0 0 1.5rem; }
+  .cv-about { font-family: var(--serif); font-size: 1.15rem; line-height: 1.65; }
+  .cv-about p { margin: 0 0 .8em; }
+  .cv-skills { font-size: .95rem; margin: 1.2rem 0 0; }
+
+  .timeline { list-style: none; padding: 0; margin: 0; }
+  .job { position: relative; padding: 0 0 2.4rem 1.6rem; border-left: 1px solid var(--line); }
+  .job:last-child { padding-bottom: 0; border-left-color: transparent; }
+  .job::before { content: ''; position: absolute; left: -5px; top: .45rem; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
+  .job:first-child::before { background: var(--accent); }
+  .job h3 { font-size: 1.3rem; margin: 0; }
+  .job-company { margin: .15rem 0 0; font-weight: 500; }
+  .job-meta { margin: .15rem 0 0; font-size: .88rem; font-variant-numeric: tabular-nums; }
+  .job-summary { margin: .8rem 0 .5rem; }
+  .job-highlights { margin: 0; padding-left: 1.1rem; color: var(--text); }
+  .job-highlights li { margin: .35rem 0; font-size: .97rem; }
+  .job-highlights li::marker { color: var(--muted); }
+
+  @media print {
+    .cv { max-width: none; padding: 0; }
+    .cv-print { display: none; }
+    .print-only { display: block; margin: .3rem 0 0; font-size: .85rem; }
+    .cv-header .page-title { font-size: 1.9rem; }
+    .cv-headline { font-size: 1.05rem; }
+    .cv-section { margin-top: 1.3rem; }
+    .cv-section > h2 { margin-bottom: .9rem; break-after: avoid; }
+    .cv-about { font-size: 1rem; line-height: 1.5; }
+    .cv-about p { margin-bottom: .5em; }
+    .job { padding-bottom: 1rem; }
+    .job-head { break-inside: avoid; break-after: avoid; }
+    .job h3 { font-size: 1.08rem; }
+    .job-summary { margin: .4rem 0 .3rem; }
+    .job-highlights li { margin: .2rem 0; font-size: .93rem; break-inside: avoid; }
+  }
+</style>

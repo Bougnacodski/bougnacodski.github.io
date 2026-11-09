@@ -75,6 +75,8 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.2; lett
 .nav { display: flex; align-items: center; gap: 1.4rem; font-size: .95rem; }
 .nav a { text-decoration: none; color: var(--muted); }
 .nav a:hover, .nav a[aria-current='page'] { color: var(--text); }
+.header-tools { display: flex; align-items: center; gap: 1rem; }
+.site-header .nav { margin-left: auto; margin-right: 1.4rem; }
 .theme-toggle { background: none; border: 1px solid var(--line); color: var(--muted); width: 2rem; height: 2rem; border-radius: 999px; cursor: pointer; display: grid; place-items: center; padding: 0; }
 .theme-toggle:hover { color: var(--text); border-color: var(--muted); }
 
@@ -93,8 +95,8 @@ h1, h2, h3 { font-family: var(--serif); font-weight: 500; line-height: 1.2; lett
 .translation-note a { color: var(--accent); }
 @media (max-width: 560px) {
   .site-header .container { flex-wrap: wrap; height: auto; padding-top: .9rem; padding-bottom: .9rem; row-gap: .5rem; }
-  .nav { gap: 1.1rem; width: 100%; }
-  .lang-switch { margin-left: auto; }
+  .site-header .nav { order: 3; width: 100%; margin: 0; gap: .5rem 1rem; flex-wrap: wrap; font-size: .93rem; }
+  .header-tools { gap: .6rem; }
 }
 
 main { padding-top: 3.5rem; }
@@ -184,3 +186,16 @@ a.tag:hover { background: var(--accent-soft); color: var(--accent); }
 .comments-note { font-size: .88rem; margin: 0 0 1.5rem; }
 
 .page-title { font-size: clamp(2rem, 5vw, 2.6rem); margin: 0 0 .6rem; }
+
+/* ---------- Impression (CV en PDF notamment) ---------- */
+@media print {
+  :root, :root[data-theme='dark'] {
+    --bg: #fff; --surface: #f3f3f3; --text: #111; --muted: #555; --line: #ddd; --accent: #2f5d50;
+    color-scheme: light;
+  }
+  @page { margin: 16mm 14mm; }
+  body { font-size: 10.5pt; }
+  .site-header, .site-footer, .comments, .post-footer, .toc { display: none !important; }
+  main { padding-top: 0; }
+  a { text-decoration: none; }
+}
