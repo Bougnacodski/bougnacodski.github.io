@@ -52,6 +52,8 @@ export const UI = {
     'nav.label': 'Navigation principale',
     '404.title': "Cette page n'existe pas.",
     '404.back': "Retour à l'accueil",
+    'comments.title': 'Commentaires',
+    'comments.note': 'Les commentaires passent par GitHub : un compte GitHub est nécessaire pour participer.',
   },
   en: {
     'nav.blog': 'Writing',
@@ -87,6 +89,8 @@ export const UI = {
     'nav.label': 'Main navigation',
     '404.title': "This page doesn't exist.",
     '404.back': 'Back to home',
+    'comments.title': 'Comments',
+    'comments.note': 'Comments are powered by GitHub: you need a GitHub account to take part.',
   },
 } as const;
 

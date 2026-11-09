@@ -1,8 +1,9 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import Comments from '../components/Comments.astro';
 import { ROUTES, t, type Lang } from '../i18n';
-import { formatDate, readingTime, tagPath, postPath, url } from '../utils';
+import { formatDate, readingTime, tagPath, postPath, translationKey, url } from '../utils';
 
 type Post = CollectionEntry<'blog'>;
 interface Props { lang: Lang; post: Post; newer?: Post; older?: Post; translation?: Post }
@@ -49,6 +50,8 @@ const alt = translation ? postPath(translation) : undefined;
     <div class="prose">
       <Content />
     </div>
+
+    {post.data.comments && !post.data.draft && <Comments lang={lang} term={translationKey(post)} />}
 
     <nav class="post-footer" aria-label={t(lang, 'post.neighbours')}>
       <div>

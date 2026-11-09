@@ -1,0 +1,76 @@
+---
+// Fil de commentaires giscus, en bas de chaque article.
+// Les versions française et anglaise d'un même article partagent le même fil (clé `term`).
+import { COMMENTS } from '../config';
+import { t, type Lang } from '../i18n';
+
+interface Props { lang: Lang; term: string }
+const { lang, term } = Astro.props;
+const enabled = Boolean(COMMENTS.repoId && COMMENTS.categoryId);
+---
+{enabled && (
+  <>
+  <section class="comments" aria-label={t(lang, 'comments.title')}>
+    <h2>{t(lang, 'comments.title')}</h2>
+    <p class="muted comments-note">{t(lang, 'comments.note')}</p>
+    <div
+      id="giscus"
+      data-repo={COMMENTS.repo}
+      data-repo-id={COMMENTS.repoId}
+      data-category={COMMENTS.category}
+      data-category-id={COMMENTS.categoryId}
+      data-term={term}
+      data-lang={lang}
+    ></div>
+  </section>
+
+<script is:inline>
+  (function () {
+    const host = document.getElementById('giscus');
+    if (!host) return;
+
+    // Thème giscus aligné sur celui du site (y compris après un clic sur le bouton de thème).
+    const currentTheme = () => {
+      const forced = document.documentElement.dataset.theme;
+      const dark = forced ? forced === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      return dark ? 'dark_dimmed' : 'light';
+    };
+
+    const s = document.createElement('script');
+    s.src = 'https://giscus.app/client.js';
+    s.async = true;
+    s.crossOrigin = 'anonymous';
+    const attrs = {
+      'data-repo': host.dataset.repo,
+      'data-repo-id': host.dataset.repoId,
+      'data-category': host.dataset.category,
+      'data-category-id': host.dataset.categoryId,
+      'data-mapping': 'specific',
+      'data-term': host.dataset.term,
+      'data-strict': '1',
+      'data-reactions-enabled': '1',
+      'data-emit-metadata': '0',
+      'data-input-position': 'top',
+      'data-theme': currentTheme(),
+      'data-lang': host.dataset.lang,
+      'data-loading': 'lazy',
+    };
+    for (const [k, v] of Object.entries(attrs)) s.setAttribute(k, v);
+    host.appendChild(s);
+
+    const sync = () => {
+      const frame = document.querySelector('iframe.giscus-frame');
+      frame?.contentWindow?.postMessage(
+        { giscus: { setConfig: { theme: currentTheme() } } },
+        'https://giscus.app',
+      );
+    };
+    new MutationObserver(sync).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', sync);
+  })();
+</script>
+  </>
+)}

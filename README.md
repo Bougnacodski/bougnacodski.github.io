@@ -47,6 +47,21 @@ Puis `git add`, `git commit`, `git push` : le site se met à jour tout seul.
 - Formules : `$...$` dans le texte, `$$...$$` centrées (rendu par KaTeX).
 - Images : place-les dans `public/images/` et écris `![légende](/images/photo.jpg)`.
 
+## Commentaires
+
+Les commentaires utilisent [giscus](https://giscus.app) et sont stockés dans les Discussions GitHub de ce dépôt. Un lecteur a besoin d'un compte GitHub pour commenter. Tu modères depuis l'onglet **Discussions** du dépôt.
+
+Mise en route (une seule fois) :
+
+1. **Settings → General → Features** : coche **Discussions**.
+2. Installe l'application giscus sur ce dépôt uniquement : https://github.com/apps/giscus.
+3. Sur https://giscus.app, saisis `Bougnacodski/bougnacodski.github.io`, choisis la catégorie **Announcements**, puis recopie la valeur `data-category-id` dans `categoryId` de `src/config.ts`.
+4. `git commit` puis `git push` : les commentaires apparaissent sous chaque article.
+
+- Les versions française et anglaise d'un même article partagent le même fil.
+- `comments: false` dans l'en-tête d'un article désactive ses commentaires.
+- Tant que `categoryId` est vide, aucun commentaire n'est affiché et aucun script giscus n'est chargé.
+
 ## Ajouter un projet
 
 Un fichier par projet et par langue, dans `src/content/projets/fr/` et `src/content/projets/en/` (voir les exemples), avec `title`, `description`, `repo` et/ou `url`, `stack` et `order` pour l'ordre d'affichage.

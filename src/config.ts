@@ -19,3 +19,14 @@ export const SITE = {
     { label: 'RSS', href: '/rss.xml', rss: true },
   ],
 };
+
+// Commentaires avec giscus (https://giscus.app), stockés dans les Discussions GitHub du dépôt.
+// Les commentaires restent masqués tant que `categoryId` est vide.
+// Pour l'obtenir : active les Discussions du dépôt, installe l'application giscus,
+// puis recopie la valeur `data-category-id` affichée sur https://giscus.app.
+export const COMMENTS = {
+  repo: 'Bougnacodski/bougnacodski.github.io',
+  repoId: 'R_kgDOVobBJg',
+  category: 'Announcements',
+  categoryId: '',
+};
