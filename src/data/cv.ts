@@ -1,6 +1,9 @@
 // Contenu du CV, en français et en anglais.
 // Dates au format « AAAA-MM » ; `end` absent = poste actuel.
 // Les durées (« 3 ans 3 mois ») sont calculées automatiquement à chaque déploiement.
+// Logos : dépose le fichier dans public/logos/ sous le nom indiqué par `logo`
+// (ex. public/logos/chanel.svg ; formats acceptés : svg, png, webp, jpg).
+// Sans fichier, une pastille avec l'initiale de l'entreprise s'affiche à la place.
 import type { Lang } from '../i18n';
 
 type Text = Record<Lang, string>;
@@ -8,6 +11,7 @@ type Text = Record<Lang, string>;
 export interface Experience {
   role: string;
   company: string;
+  logo?: string;
   contract: Text;
   location?: Text;
   start: string;
@@ -48,6 +52,7 @@ export const CV = {
     {
       role: 'Data & AI Engineering Manager',
       company: 'Chanel',
+      logo: 'chanel',
       contract: { fr: 'CDI', en: 'Full-time' },
       start: '2023-09',
       summary: {
@@ -72,6 +77,7 @@ export const CV = {
     {
       role: 'Data & AI Solution Architect',
       company: 'Groupe Clarins',
+      logo: 'clarins',
       contract: { fr: 'Freelance', en: 'Freelance' },
       location: { fr: 'À distance', en: 'Remote' },
       start: '2021-04',
@@ -98,6 +104,7 @@ export const CV = {
     {
       role: 'Lead Data Engineer',
       company: 'Believe',
+      logo: 'believe',
       contract: { fr: 'Freelance', en: 'Freelance' },
       location: { fr: 'À distance', en: 'Remote' },
       start: '2019-11',
@@ -124,6 +131,7 @@ export const CV = {
     {
       role: 'Data Engineer',
       company: 'Micropole',
+      logo: 'micropole',
       contract: { fr: 'CDI', en: 'Full-time' },
       location: { fr: 'Levallois-Perret, Île-de-France', en: 'Levallois-Perret, France' },
       start: '2017-09',
@@ -150,6 +158,7 @@ export const CV = {
     {
       role: 'Data Engineer',
       company: 'Infotel',
+      logo: 'infotel',
       contract: { fr: 'CDI', en: 'Full-time' },
       location: { fr: 'Paris et périphérie', en: 'Paris area, France' },
       start: '2015-12',
@@ -176,6 +185,7 @@ export const CV = {
     {
       role: 'Data Scientist',
       company: 'Orange',
+      logo: 'orange',
       contract: { fr: 'CDI', en: 'Full-time' },
       location: { fr: 'Issy-les-Moulineaux', en: 'Issy-les-Moulineaux, France' },
       start: '2014-11',

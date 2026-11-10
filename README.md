@@ -66,6 +66,8 @@ Mise en route (une seule fois) :
 
 La page CV (`/cv/` et `/en/cv/`) est générée à partir de `src/data/cv.ts`. Pour ajouter un poste, copie un bloc de la liste `experience` et place-le en tête de liste. Les dates s'écrivent au format `AAAA-MM`. Laisse `end` absent pour le poste actuel. Les durées se calculent toutes seules.
 
+**Logos des entreprises** : dépose chaque logo dans `public/logos/`, sous le nom indiqué par le champ `logo` du poste dans `src/data/cv.ts` : `chanel`, `clarins`, `believe`, `micropole`, `infotel`, `orange`. Formats acceptés : `.svg` (idéal), `.png`, `.webp` ou `.jpg`. Exemple : `public/logos/chanel.svg`. Les logos s'affichent sur un fond blanc arrondi, lisible en mode sombre comme à l'impression. Un fichier carré ou presque, sur fond transparent, donne le meilleur rendu. Sans fichier, une pastille avec l'initiale de l'entreprise s'affiche à la place.
+
 Le bouton « Télécharger en PDF » ouvre la fenêtre d'impression du navigateur. Choisis « Enregistrer au format PDF » : une mise en page dédiée retire le menu et le pied de page.
 
 ## Ajouter un projet

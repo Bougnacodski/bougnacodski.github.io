@@ -1,8 +1,11 @@
 ---
+import fs from 'node:fs';
+import path from 'node:path';
 import Base from '../layouts/Base.astro';
 import { CV } from '../data/cv';
 import { SITE } from '../config';
 import { LOCALES, ROUTES, otherLang, t, type Lang } from '../i18n';
+import { url } from '../utils';
 
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -24,6 +27,15 @@ const duration = (start: string, end = today) => {
   const months = (b.y - a.y) * 12 + (b.m - a.m) + 1;
   return t(lang, 'cv.duration')(Math.floor(months / 12), months % 12);
 };
+// Cherche public/logos/<logo>.(svg|png|webp|jpg) au moment de la compilation.
+const LOGO_EXT = ['svg', 'png', 'webp', 'jpg', 'jpeg'];
+const logoSrc = (id?: string) => {
+  if (!id) return undefined;
+  const ext = LOGO_EXT.find((e) => fs.existsSync(path.join(process.cwd(), 'public', 'logos', `${id}.${e}`)));
+  return ext ? url(`/logos/${id}.${ext}`) : undefined;
+};
+// Initiale affichée sans logo : on ignore « Groupe ».
+const initial = (company: string) => company.replace(/^Groupe\s+/i, '').charAt(0).toUpperCase();
 const github = SITE.links.find((l) => l.label === 'GitHub');
 ---
 <Base lang={lang} title={t(lang, 'cv.title')} description={t(lang, 'cv.description')} alt={ROUTES.cv[otherLang(lang)]}>
@@ -54,8 +66,14 @@ const github = SITE.links.find((l) => l.label === 'GitHub');
     <section class="cv-section">
       <h2>{t(lang, 'cv.experience')}</h2>
       <ol class="timeline">
-        {CV.experience.map((job) => (
+        {CV.experience.map((job) => {
+          const src = logoSrc(job.logo);
+          return (
           <li class="job">
+            <div class={`job-logo${src ? '' : ' monogram'}`} aria-hidden="true">
+              {src ? <img src={src} alt="" loading="lazy" decoding="async" /> : initial(job.company)}
+            </div>
+            <div class="job-body">
             <div class="job-head">
               <h3>{job.role}</h3>
               <p class="job-company">
@@ -74,8 +92,10 @@ const github = SITE.links.find((l) => l.label === 'GitHub');
             <ul class="job-highlights">
               {job.highlights.map((h) => <li>{h[lang]}</li>)}
             </ul>
+            </div>
           </li>
-        ))}
+          );
+        })}
       </ol>
     </section>
   </div>
@@ -96,10 +116,15 @@ const github = SITE.links.find((l) => l.label === 'GitHub');
   .cv-skills { font-size: .95rem; margin: 1.2rem 0 0; }
 
   .timeline { list-style: none; padding: 0; margin: 0; }
-  .job { position: relative; padding: 0 0 2.4rem 1.6rem; border-left: 1px solid var(--line); }
-  .job:last-child { padding-bottom: 0; border-left-color: transparent; }
-  .job::before { content: ''; position: absolute; left: -5px; top: .45rem; width: 9px; height: 9px; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); }
-  .job:first-child::before { background: var(--accent); }
+  .job { --logo: 46px; position: relative; display: grid; grid-template-columns: var(--logo) minmax(0, 1fr); column-gap: 1.2rem; padding-bottom: 2.4rem; }
+  .job:last-child { padding-bottom: 0; }
+  /* Fil de la frise, d'un logo au suivant */
+  .job::before { content: ''; position: absolute; left: calc(var(--logo) / 2); top: calc(var(--logo) + .5rem); bottom: .5rem; width: 1px; background: var(--line); }
+  .job:last-child::before { display: none; }
+  .job-logo { width: var(--logo); height: var(--logo); border-radius: 10px; border: 1px solid var(--line); background: #fff; display: grid; place-items: center; overflow: hidden; }
+  .job-logo img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+  .job-logo.monogram { background: var(--surface); color: var(--muted); font-family: var(--serif); font-size: 1.35rem; line-height: 1; }
+  @media (max-width: 560px) { .job { --logo: 38px; column-gap: .9rem; } }
   .job h3 { font-size: 1.3rem; margin: 0; }
   .job-company { margin: .15rem 0 0; font-weight: 500; }
   .job-meta { margin: .15rem 0 0; font-size: .88rem; font-variant-numeric: tabular-nums; }
@@ -118,7 +143,9 @@ const github = SITE.links.find((l) => l.label === 'GitHub');
     .cv-section > h2 { margin-bottom: .9rem; break-after: avoid; }
     .cv-about { font-size: 1rem; line-height: 1.5; }
     .cv-about p { margin-bottom: .5em; }
-    .job { padding-bottom: 1rem; }
+    .job { --logo: 34px; column-gap: .9rem; padding-bottom: 1rem; }
+    .job-logo { border-radius: 7px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .job-logo img { padding: 4px; }
     .job-head { break-inside: avoid; break-after: avoid; }
     .job h3 { font-size: 1.08rem; }
     .job-summary { margin: .4rem 0 .3rem; }
